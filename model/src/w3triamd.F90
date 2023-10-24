@@ -2286,7 +2286,7 @@ CONTAINS
              MAPSF(IS,1),'INDEX IN nest.ww3:', JMEMO
 #endif
       ELSE
-        FLOK=.TRUE.
+        FLOK=.FALSE. ! disallow
       END IF
 
     END DO
@@ -2297,6 +2297,7 @@ CONTAINS
         WRITE(6,*) 'THIS POINT HAS MAPSTA=2:',ISBPI(J)
       END DO
       ISBPI(N+1:NBI)=ISBPI(1)
+      FLOK=.FALSE. ! disallow
     END IF
 
 900 FORMAT (/' *** WAVEWATCH III ERROR IN W3IOBC : '/                &
