@@ -230,12 +230,13 @@ CONTAINS
     INTEGER(KIND=4),ALLOCATABLE        :: IFOUND(:), VERTEX(:), BOUNDTMP(:)
     DOUBLE PRECISION, ALLOCATABLE      :: XYBTMP1(:,:),XYBTMP2(:,:)
     REAL                               :: z
+    REAL                               :: vers
 
     OPEN(NDS,FILE = FNAME,STATUS='old')
     READ (NDS,'(A)') COMSTR
     IF (COMSTR.EQ.' ') COMSTR = '$'
     CALL NEXTLN(COMSTR, NDS, NDSE)
-    READ(NDS,*) i,j,k
+    READ(NDS,*) vers,j,k
     CALL NEXTLN(COMSTR, NDS, NDSE)
     LPDLIB = .FALSE.
 #ifdef W3_PDLIB
@@ -475,6 +476,7 @@ CONTAINS
     LOGICAL                            :: lfile_exists
     CHARACTER                          :: COMSTR*1, SPACE*1 = ' ', CELS*64
     DOUBLE PRECISION, ALLOCATABLE      :: XYBTMP1(:,:)
+    REAL                               :: vers
 
     INQUIRE(FILE=FNAME, EXIST=lfile_exists)
     IF (.NOT. lfile_exists) RETURN
@@ -482,7 +484,7 @@ CONTAINS
     READ (NDS,'(A)') COMSTR
     IF (COMSTR.EQ.' ') COMSTR = '$'
     CALL NEXTLN(COMSTR, NDS, NDSE)
-    READ(NDS,*) i,j,k
+    READ(NDS,*) vers,j,k
     CALL NEXTLN(COMSTR, NDS, NDSE)
     !
     ! read number of nodes and nodes from Gmsh files
