@@ -23,7 +23,6 @@ manual/ww3_prnc.tex
 manual/ww3_gspl.tex
 manual/ww3_shel.tex
 manual/ww3_multi.tex
-manual/ww3_multi.tel
 manual/ww3_trck.tex
 manual/ww3_outf.tex
 manual/ww3_outp.tex
@@ -45,8 +44,10 @@ manual/*.toc
 manual/*.out
 manual/*.dvi
 manual/*.pdf
+manual/*.tel
 model?
 model??
+out*
 regtests/list*
 regtests/before
 regtests/matrix*
