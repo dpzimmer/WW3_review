@@ -71,7 +71,7 @@ elseif(CMAKE_Fortran_COMPILER_ID MATCHES "^(GNU)$")
   set(compile_flags_release -O3)
   set(compile_flags_debug -Wall -fcheck=all -ffpe-trap=invalid,zero,overflow -frecursive -fbacktrace)
   
-  if(${CMAKE_Fortran_COMPILER_VERSION} VERSION_GREATER_EQUAL 10)
+  if(CMAKE_Fortran_COMPILER_VERSION VERSION_GREATER_EQUAL 10)
     target_compile_options(ww3_lib PUBLIC -fallow-argument-mismatch)
   endif()
 
@@ -80,7 +80,7 @@ elseif(CMAKE_Fortran_COMPILER_ID MATCHES "PGI")
   set(compile_flags_release -O3)
   set(compile_flags_debug -O0 -Mbounds -Mchkfpstk -Mchkstk -Mdalign -Mdclchk -Mdepchk -Miomutex -Ktrap=fp -Mrecursive -traceback)
   
-  if(${CMAKE_Fortran_COMPILER_VERSION} VERSION_GREATER_EQUAL 10)
+  if(CMAKE_Fortran_COMPILER_VERSION VERSION_GREATER_EQUAL 10)
     target_compile_options(ww3_lib PUBLIC -fallow-argument-mismatch -fallow-invalid-boz)
   endif()
 
@@ -174,7 +174,6 @@ if("SCRIP" IN_LIST switches)
   target_sources(ww3_lib PRIVATE ${scrip_src})
 endif()
 
-
 if("SCRIPNC" IN_LIST switches OR "OASIS" IN_LIST switches OR "TRKNC" IN_LIST switches)
   if(NOT NetCDF_Fortran_FOUND)
     message(FATAL_ERROR "Cannot build SCRIPNC, OASIS, or TRKNC without NetCDF")
@@ -211,7 +210,6 @@ install(
 
 install(FILES ${CMAKE_BINARY_DIR}/switch DESTINATION ${CMAKE_INSTALL_PREFIX})
 install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/mod DESTINATION ${CMAKE_INSTALL_PREFIX})
-  
 
 export(EXPORT WW3Exports
   NAMESPACE WW3::
