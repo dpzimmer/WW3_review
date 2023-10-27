@@ -72,7 +72,7 @@ elseif(CMAKE_Fortran_COMPILER_ID MATCHES "^(GNU)$")
   set(compile_flags_debug -Wall -fcheck=all -ffpe-trap=invalid,zero,overflow -frecursive -fbacktrace)
   
   if(CMAKE_Fortran_COMPILER_VERSION VERSION_GREATER_EQUAL 10)
-    target_compile_options(ww3_lib PUBLIC -fallow-argument-mismatch)
+    target_compile_options(ww3_lib PUBLIC -fallow-argument-mismatch -w)
   endif()
 
 elseif(CMAKE_Fortran_COMPILER_ID MATCHES "PGI")
