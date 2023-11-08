@@ -566,7 +566,14 @@ CONTAINS
     LOGICAL                 :: FLACT, FLZERO, FLFRST, FLMAP, TSTAMP,&
          SKIP_O, FLAG_O, FLDDIR, READBC,      &
          FLAG0 = .FALSE., FLOUTG, FLPFLD,     &
-         FLPART, LOCAL, FLOUTG2
+         FLPART, LOCAL, FLOUTG2,              &
+!
+! DPZ
+!
+         FLOMP = .FALSE. ! DPZ
+!
+! DPZ
+!
     !
 #ifdef W3_MPI
     LOGICAL                 :: FLGMPI(0:8)
@@ -608,6 +615,15 @@ CONTAINS
     memunit = 40000+iaproc
     ! 0.a Set pointers to data structure
     !
+!
+! DPZ
+!
+#ifdef W3_OMPX
+    FLOMP  = .TRUE.    
+#endif
+!
+! DPZ
+!
 #ifdef W3_COU
     SCREEN   =  333
 #endif
@@ -680,7 +696,13 @@ CONTAINS
       !!Li   Use sea point only field for SMC grid.
       ALLOCATE ( FIELD(NCel) )
 #endif
-    ELSE
+!
+! DPZ
+!
+    ELSEIF ( .NOT.FLOMP ) THEN
+!
+! DPZ
+!
       ALLOCATE ( FIELD(1-NY:NY*(NX+2)) )
     ENDIF
     !
@@ -1850,10 +1872,29 @@ CONTAINS
                 CALL MPI_STARTALL (NRQSG1, IRQSG1(1,2), IERR_MPI)
               END IF
 #endif
-              !
+!
+! DPZ
+!
+#ifdef W3_OMPX
+              ! Each thread has a local copy of FIELD (existing one is ignored, for now)
+              !$OMP PARALLEL PRIVATE (ISPEC,FIELD)
+              IF ( FLOMP ) ALLOCATE ( FIELD(1-NY:NY*(NX+2)) )
+#endif
+!
+! DPZ
+!
               !
               ! Initialize FIELD variable
               FIELD = 0.
+!
+! DPZ
+!
+#ifdef W3_OMPX
+              !$OMP DO SCHEDULE (DYNAMIC,1)
+#endif
+!
+! DPZ
+!
               !
               DO ISPEC=1, NSPEC
                 IF ( IAPPRO(ISPEC) .EQ. IAPROC ) THEN
@@ -1919,6 +1960,17 @@ CONTAINS
 
                 END IF
               END DO
+!
+! DPZ
+!
+#ifdef W3_OMPX
+              !$OMP  END DO
+              IF ( FLOMP ) DEALLOCATE ( FIELD )
+              !$OMP END PARALLEL
+#endif
+!
+! DPZ
+!
               !
 #ifdef W3_MPI
               IF ( NRQSG1 .GT. 0 ) THEN
@@ -2812,8 +2864,13 @@ CONTAINS
     END IF
 
     IF ( IAPROC .EQ. NAPLOG ) WRITE (NDSO,902)
-    !
-    DEALLOCATE(FIELD)
+!
+! DPZ
+!
+    IF ( .NOT.FLOMP ) DEALLOCATE(FIELD)
+!
+! DPZ
+!
     DEALLOCATE(TAUWX, TAUWY)
     !
     call print_memcheck(memunit, 'memcheck_____:'//' WW3_WAVE END W3WAVE')

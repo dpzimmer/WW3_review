@@ -88,6 +88,10 @@
                 "name": "OMPG"
             },
             {
+                "name": "OMPX",
+                "requires": ["OMPG"]
+            },
+            {
                 "name": "OMPH",
                 "requires": ["MPI", "OMPG"]
             }
